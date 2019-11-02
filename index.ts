@@ -17,6 +17,7 @@
 import { configureAspects } from "@atomist/sdm-pack-aspect";
 import { LicenseAspect } from "./lib/license";
 import { CurrentPipelineAspect } from "./lib/pipeline";
+import { NpmScripts } from "./lib/npmScripts";
 
 // Main entry point into the SDM
-export const configuration = configureAspects([LicenseAspect, CurrentPipelineAspect]);
+export const configuration = configureAspects([LicenseAspect, CurrentPipelineAspect, NpmScripts]);
