@@ -20,17 +20,25 @@ import {
 import { AspectWithReportDetails } from "@atomist/sdm-pack-aspect";
 import { sha256, FP } from "@atomist/sdm-pack-fingerprint";
 
-interface ScriptsFingerprintData {
+export interface ScriptsFingerprintData {
     scripts: Record<string, string>,
     link: string,
 }
 
-function scriptFingerprintOf(category: "aspect-sdm" | "sdm",
+const NpmScriptsFingerprintType = "npm-scripts";
+
+type NpmScriptsCategory = "aspect-sdm" | "sdm";
+
+export function fingerprintNameFromCategory(category: NpmScriptsCategory): string {
+    return [NpmScriptsFingerprintType, category].join("-");
+}
+
+function scriptFingerprintOf(category: NpmScriptsCategory,
     scripts: Record<string, string>,
     link: string): FP<ScriptsFingerprintData> {
     return {
-        type: "npm-scripts",
-        name: "npm-scripts-" + category,
+        type: NpmScriptsFingerprintType,
+        name: fingerprintNameFromCategory(category),
         data: { scripts, link },
         sha: sha256(JSON.stringify(scripts)),
         abbreviation: "npmscr",

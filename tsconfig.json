@@ -8,11 +8,13 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "lib": ["DOM"],
+    "lib": [
+      "DOM"
+    ],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
@@ -22,7 +24,9 @@
     "lib/**/*.ts",
     "test/**/*.ts"
   ],
-  "exclude": [".#*"],
+  "exclude": [
+    ".#*"
+  ],
   "compileOnSave": true,
   "buildOnSave": false,
   "atom": {
