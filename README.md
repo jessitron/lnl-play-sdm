@@ -2,7 +2,9 @@
   <img src="https://images.atomist.com/sdm/SDM-Logo-Dark.png">
 </p>
 
-# @atomist-seeds/aspect
+# @satellite-of-love/lnl-play-sdm
+
+In which Jess plays with an SDM, as usual
 
 [![npm version](https://img.shields.io/npm/v/@atomist-seeds/aspect.svg)](https://www.npmjs.com/package/@atomist-seeds/aspect)
 
