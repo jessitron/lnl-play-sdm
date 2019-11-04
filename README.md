@@ -4,7 +4,7 @@
 
 # @satellite-of-love/lnl-play-sdm
 
-In which Jess plays with an SDM, as usual
+In which Jess plays with an SDM, as usual. This one is trying to make NPM scripts consistent across categories of node apps.
 
 An [Atomist][atomist] software delivery machine
 (SDM) to host an Atomist Aspect.
