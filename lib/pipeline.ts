@@ -41,8 +41,8 @@ function pipelineFingerprintOf(detected: Pipeline["detected"]): FP<Pipeline> {
 
 export const
     CurrentPipelineAspect: AspectWithReportDetails<Pipeline> = {
-        name: "gh-license",
-        displayName: "License",
+        name: "current-pipeline",
+        displayName: "Pipeline",
         extract: async (p, pli) => {
             // Look for a file that indicates Modern pipeline
             if (await p.hasFile("deployment.yaml")) {
