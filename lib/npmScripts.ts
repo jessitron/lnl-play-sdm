@@ -20,7 +20,7 @@ import {
 import { AspectWithReportDetails } from "@atomist/sdm-pack-aspect";
 import { sha256, FP } from "@atomist/sdm-pack-fingerprint";
 
-export interface ScriptsFingerprintData {
+export interface NpmScriptsFingerprintData {
     scripts: Record<string, string>,
 }
 
@@ -33,7 +33,7 @@ export function fingerprintNameFromCategory(category: NpmScriptsCategory): strin
 }
 
 function scriptFingerprintOf(category: NpmScriptsCategory,
-    scripts: Record<string, string>): FP<ScriptsFingerprintData> {
+    scripts: Record<string, string>): FP<NpmScriptsFingerprintData> {
     return {
         type: NpmScriptsFingerprintType,
         name: fingerprintNameFromCategory(category),
@@ -57,7 +57,7 @@ function scriptFingerprintOf(category: NpmScriptsCategory,
  * Only the `scripts` affect the fingerprint SHA; only the link is displayed.
  */
 export const
-    NpmScripts: AspectWithReportDetails<ScriptsFingerprintData> = {
+    NpmScripts: AspectWithReportDetails<NpmScriptsFingerprintData> = {
         name: "npm-scripts",
         displayName: "npm scripts",
         extract: async (p, pli) => {
@@ -83,7 +83,16 @@ export const
                 logger.error("No parameters");
                 return p;
             }
-            const fp = papi.parameters.fp;
+            const fp = papi.parameters.fp as FP<NpmScriptsFingerprintData>;
+
+            const happyScripts = fp.data.scripts;
+
+            const packageDotJson = await p.findFile("package.json");
+            const json = JSON.parse(await packageDotJson.getContent());
+            json.scripts = happyScripts;
+
+            await packageDotJson.setContent(JSON.stringify(json, null, 2));
+
             return p;
         },
         toDisplayableFingerprint: fp => fp.sha.substr(0, 7),

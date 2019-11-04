@@ -16,10 +16,10 @@
 
 import * as assert from "power-assert";
 import { InMemoryProject, Project } from "@atomist/automation-client";
-import { NpmScripts, ScriptsFingerprintData, fingerprintNameFromCategory } from "../lib/npmScripts";
+import { NpmScripts, NpmScriptsFingerprintData, fingerprintNameFromCategory } from "../lib/npmScripts";
 import { FP } from "@atomist/sdm-pack-fingerprint";
 
-async function getNpmScriptsFingerprints(p: Project): Promise<Array<FP<ScriptsFingerprintData>>> {
+async function getNpmScriptsFingerprints(p: Project): Promise<Array<FP<NpmScriptsFingerprintData>>> {
     return toArray(await NpmScripts.extract(p, {} as any));
 }
 
