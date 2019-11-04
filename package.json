@@ -53,7 +53,7 @@
     "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
     "build": "run-s compile test lint doc",
     "clean": "run-p clean:compile clean:test clean:doc clean:run",
-    "clean:compile": "rimraf git-info.json \"index.{d.ts,js}{,.map}\" \"{lib,test}/**/*.{d.ts,js}{,.map}\" lib/typings/types.ts",
+    "clean:compile": "rimraf git-info.json \"index.{d.ts,js}{,.map}\" \"{lib,test,views,public}/**/*.{d.ts,js}{,.map}\" lib/typings/types.ts",
     "clean:dist": "run-s clean clean:npm",
     "clean:doc": "rimraf doc",
     "clean:npm": "rimraf node_modules",
@@ -69,7 +69,9 @@
     "start": "atm-start",
     "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
-    "typedoc": "npm run doc"
+    "typedoc": "npm run doc",
+    "db:create": "psql --command \"CREATE USER org_viz WITH SUPERUSER PASSWORD 'atomist'\" && createdb -O org_viz org_viz && psql -f ./node_modules/@atomist/sdm-pack-aspect/ddl/create.ddl org_viz",
+    "db:delete": "psql --command \"DROP DATABASE org_viz\" --command \"DROP ROLE org_viz\""
   },
   "engines": {
     "node": ">=8.2.0",
