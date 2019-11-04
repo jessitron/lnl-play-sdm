@@ -20,4 +20,4 @@ import { CurrentPipelineAspect } from "./lib/pipeline";
 import { NpmScripts } from "./lib/npmScripts";
 
 // Main entry point into the SDM
-export const configuration = configureAspects([NpmScripts]);
+export const configuration = configureAspects([LicenseAspect, NpmScripts]);

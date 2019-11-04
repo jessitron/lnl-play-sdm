@@ -61,17 +61,21 @@ export const
         name: "npm-scripts",
         displayName: "npm scripts",
         extract: async (p, pli) => {
+            logger.info("JESS: looking at " + p.name)
             const packageJson = await getPackageJsonContent(p);
             if (packageJson === undefined) {
+                logger.info("JESS: no package json")
                 return [];
             }
 
             const category = determineCategory(packageJson);
             if (category === undefined) {
+                logger.info("JESS: no category")
                 return [];
             }
 
             const scripts = packageJson.scripts || {};
+            logger.info("JESS: returning a fingerprint")
             return scriptFingerprintOf(category, scripts)
         },
         apply: async (p, papi) => {
