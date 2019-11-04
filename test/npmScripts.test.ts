@@ -16,7 +16,7 @@
 
 import * as assert from "power-assert";
 import { InMemoryProject, Project } from "@atomist/automation-client";
-import { NpmScripts, ScriptsFingerprintData } from "../lib/npmScripts";
+import { NpmScripts, ScriptsFingerprintData, fingerprintNameFromCategory } from "../lib/npmScripts";
 import { FP } from "@atomist/sdm-pack-fingerprint";
 
 async function methodUnderTest(p: Project): Promise<Array<FP<ScriptsFingerprintData>>> {
@@ -37,7 +37,37 @@ describe("npm scripts aspect", () => {
         const p = projectWith(packageJson);
         const result = await methodUnderTest(p);
         assert.strictEqual(result.length, 1);
-        assert.strictEqual(result[0].name.endsWith("aspect-sdm"), true, "Name was: " + result[0].name)
+        assert.strictEqual(result[0].name, fingerprintNameFromCategory("aspect-sdm"), "Name was: " + result[0].name)
+    });
+
+    it("categorizes an sdm", async () => {
+        const packageJson = {
+            dependencies: {
+                "@atomist/sdm-pack-somethingelse": "whatever",
+                "@atomist/sdm": "yeah",
+            },
+            scripts: {
+                "something": "do stuff"
+            }
+        }
+        const p = projectWith(packageJson);
+        const result = await methodUnderTest(p);
+        assert.strictEqual(result.length, 1);
+        assert.strictEqual(result[0].name, fingerprintNameFromCategory("sdm"), "Name was: " + result[0].name)
+    });
+
+    it("does not a produce a fingerprint for non-sdms", async () => {
+        const packageJson = {
+            dependencies: {
+                "something": "orother",
+            },
+            scripts: {
+                "something": "do stuff"
+            }
+        }
+        const p = projectWith(packageJson);
+        const result = await methodUnderTest(p);
+        assert.strictEqual(result.length, 0);
     });
 
     it("has the same SHA for the same scripts", async () => {

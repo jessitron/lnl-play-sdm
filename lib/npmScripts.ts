@@ -15,14 +15,13 @@
  */
 
 import {
-    logger,
+    logger, Project,
 } from "@atomist/automation-client";
 import { AspectWithReportDetails } from "@atomist/sdm-pack-aspect";
 import { sha256, FP } from "@atomist/sdm-pack-fingerprint";
 
 export interface ScriptsFingerprintData {
     scripts: Record<string, string>,
-    link: string,
 }
 
 const NpmScriptsFingerprintType = "npm-scripts";
@@ -34,17 +33,17 @@ export function fingerprintNameFromCategory(category: NpmScriptsCategory): strin
 }
 
 function scriptFingerprintOf(category: NpmScriptsCategory,
-    scripts: Record<string, string>,
-    link: string): FP<ScriptsFingerprintData> {
+    scripts: Record<string, string>): FP<ScriptsFingerprintData> {
     return {
         type: NpmScriptsFingerprintType,
         name: fingerprintNameFromCategory(category),
-        data: { scripts, link },
+        data: { scripts },
         sha: sha256(JSON.stringify(scripts)),
         abbreviation: "npmscr",
         version: "0.0.1",
     }
 }
+
 
 /**
  * Keep the package.json `scripts` list consistent for some categories of projects.
@@ -62,7 +61,18 @@ export const
         name: "npm-scripts",
         displayName: "npm scripts",
         extract: async (p, pli) => {
-            return [];
+            const packageJson = await getPackageJsonContent(p);
+            if (packageJson === undefined) {
+                return [];
+            }
+
+            const category = determineCategory(packageJson);
+            if (category === undefined) {
+                return [];
+            }
+
+            const scripts = packageJson.scripts || {};
+            return scriptFingerprintOf(category, scripts)
         },
         apply: async (p, papi) => {
             if (!papi.parameters || !papi.parameters.fp) {
@@ -72,7 +82,7 @@ export const
             const fp = papi.parameters.fp;
             return p;
         },
-        toDisplayableFingerprint: fp => fp.data.link,
+        toDisplayableFingerprint: fp => fp.sha.substr(0, 7),
         toDisplayableFingerprintName: (fpname) => "NPM Scripts for " + fpname.replace("npm-scripts-", ""),
         details: {
             description: "NPM Scripts",
@@ -84,3 +94,35 @@ export const
             manage: true,
         } as any,
     };
+
+
+
+// define just enough
+type PackageJson = {
+    dependencies?: Record<string, string>,
+    scripts?: Record<string, string>
+}
+
+async function getPackageJsonContent(p: Project): Promise<PackageJson | undefined> {
+    if (!await p.hasFile("package.json")) {
+        return undefined;
+    }
+    const packageJsonContent = await p.findFile("package.json").then(f => f.getContent());
+    try {
+        return JSON.parse(packageJsonContent) as PackageJson;
+    } catch (e) {
+        logger.error("Could not parse package.json in " + p.name);
+        return undefined;
+    }
+}
+
+function determineCategory(packageJson: PackageJson): NpmScriptsCategory | undefined {
+    const dependencyNames = Object.keys(packageJson.dependencies || {});
+    if (dependencyNames.includes("@atomist/sdm-pack-aspect")) {
+        return "aspect-sdm";
+    }
+    if (dependencyNames.includes("@atomist/sdm")) {
+        return "sdm";
+    }
+    return undefined;
+}
