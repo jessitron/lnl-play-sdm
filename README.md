@@ -6,9 +6,7 @@
 
 In which Jess plays with an SDM, as usual
 
-[![npm version](https://img.shields.io/npm/v/@atomist-seeds/aspect.svg)](https://www.npmjs.com/package/@atomist-seeds/aspect)
-
-The simplest possible [Atomist][atomist] software delivery machine
+An [Atomist][atomist] software delivery machine
 (SDM) to host an Atomist Aspect.
 
 Software delivery machines enable you to control your delivery process
