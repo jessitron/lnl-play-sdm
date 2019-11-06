@@ -27,7 +27,7 @@
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.7.0",
     "@atomist/sdm-core": "^1.7.0",
-    "@atomist/sdm-pack-aspect": "^1.0.0-master.20190930134724",
+    "@atomist/sdm-pack-aspect": "^1.0.0-dont-look-for-empty-sha.20191106023838",
     "@atomist/sdm-pack-fingerprint": "5.0.1-master.20190915182018",
     "lodash": "^4.17.15"
   },
@@ -58,6 +58,7 @@
     "clean:doc": "rimraf doc",
     "clean:npm": "rimraf node_modules",
     "clean:run": "rimraf *-v8.log profile.txt log",
+    "say-hi": "echo hello",
     "clean:test": "rimraf .nyc_output coverage",
     "compile": "run-s git:info gql:gen compile:ts",
     "compile:ts": "tsc --project .",
