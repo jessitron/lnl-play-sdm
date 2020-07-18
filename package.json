@@ -29,7 +29,7 @@
     "@atomist/sdm-core": "^1.7.0",
     "@atomist/sdm-pack-aspect": "^1.0.0-dont-look-for-empty-sha.20191106023838",
     "@atomist/sdm-pack-fingerprint": "5.0.1-master.20190915182018",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.2.1",
